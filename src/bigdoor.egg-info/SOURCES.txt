@@ -1,0 +1,11 @@
+MANIFEST.in
+NEWS.txt
+README.txt
+setup.py
+src/bigdoor/__init__.py
+src/bigdoor.egg-info/PKG-INFO
+src/bigdoor.egg-info/SOURCES.txt
+src/bigdoor.egg-info/dependency_links.txt
+src/bigdoor.egg-info/entry_points.txt
+src/bigdoor.egg-info/not-zip-safe
+src/bigdoor.egg-info/top_level.txt
