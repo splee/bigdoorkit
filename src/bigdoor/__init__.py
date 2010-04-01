@@ -73,9 +73,62 @@ class BigdoorClient(object):
         params = self._validate_options(options)
         return self.get("end_user/%s" % user_id, params)
 
-    def end_user_balance(self, user_id, options=None):
+    def end_user_balance(self, user_id, currency_id=None, options=None):
         params = self._validate_options(options)
-        return self.get("end_user/%s/balance" % user_id, params)
+        url = "end_user/%s/balance" % user_id
+        if currency_id:
+            url += "/%s" % currency_id
+        return self.get(url, params)
+
+    def end_user_transaction(self, user_id, transaction_id=None,
+                             options=None):
+        params = self._validate_options(options)
+        url = "end_user/%s/transaction" % user_id
+        if transaction_id:
+            url += "/%s" % transaction_id
+        return self.get(url, params)
+
+    def end_user_level(self, user_id, level_id=None, options=None):
+        params = self._validate_options(options)
+        url = "end_user/%s/level" % user_id
+        if level_id:
+            url += "/%s" % level_id
+        return self.get(url, params)
+
+    def end_user_award(self, user_id, award_id=None, options=None):
+        params = self._validate_options(options)
+        url = "end_user/%s/award" % user_id
+        if award_id:
+            url += "/%s" % level_id
+        return self.get(url, params)
+
+    def end_user_good(self, user_id, good_id=None, options=None):
+        params = self._validate_options(options)
+        url = "end_user/%s/good" % user_id
+        if good_id:
+            url += "/%s" % good_id
+        return self.get(url, params)
+
+    def end_user_currency(self, user_id, currency_id=None, options=None):
+        params = self._validate_options(options)
+        url = "end_user/%s/currency" % user_id
+        if currency_id:
+            url += "/%s" % currency_id
+        return self.get(url, params)
+
+    def named_transaction_group(self, trans_group_id=None, options=None):
+        params = self._validate_options(options)
+        url = "named_transaction_group"
+        if trans_group_id:
+            url += "/%s" % trans_group_id
+        return self.get(url, params)
+
+    def execute_named_transaction_group(self, trans_group_id, end_user_id,
+                                        options=None):
+        params = self._validate_options(options)
+        url = "named_transaction_group/%s/execute/%s" % (trans_group_id,
+                                                         end_user_id)
+        return self.post(url, params)
 
     def generate_token(self):
         return str(uuid4())
