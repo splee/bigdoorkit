@@ -8,7 +8,7 @@ import json
 
 __version__ = "0.1"
 
-__all__ = ["BigdoorClient"]
+__all__ = ["BigdoorClient", "BigdoorException"]
 
 class BigdoorException(Exception):
     """The base Exception type for this library"""
@@ -115,6 +115,9 @@ class BigdoorClient(object):
         if currency_id:
             url += "/%s" % currency_id
         return self.get(url, params)
+
+    def create_named_transaction_group(self):
+        raise NotImplementedError
 
     def named_transaction_group(self, trans_group_id=None, options=None):
         params = self._validate_options(options)
