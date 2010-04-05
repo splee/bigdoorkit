@@ -41,7 +41,7 @@ class Client(object):
         """Flattens a parameter dictionary for signature generation"""
         keys = params.keys()
         keys.sort()
-        return "".join(["%s%s" % (k, params[k]) for k in keys])
+        return "".join(["%s%s" % (k, params[k]) for k in keys if k not in ('sig', 'format')])
 
     def _sign_request(self, url, params):
         if params is None:
