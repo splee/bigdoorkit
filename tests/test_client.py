@@ -36,7 +36,14 @@ class MockRestkitResource(object):
         self.host_str = host_str
 
     def fake_request(self, method, endpoint, **params):
-        path = os.path.join(__file__, "%s_%s" % (method, endpoint))
+        here = __file__.split("/")
+        here = "/".join(here[:-1])
+
+        short_endpoint = "_".join(endpoint.split("/")[4:])
+        short_endpoint += ".json"
+
+        path = os.path.join(here, "data", short_endpoint)
+        path = os.path.abspath(path)
         f = open(path, 'r')
         data = Bunch()
         data.body = f.read()
@@ -71,9 +78,9 @@ class TestClient(TestCase):
         assert_equal(self.client.app_secret, TEST_APP_SECRET)
         assert_equal(self.client.app_key, TEST_APP_KEY)
 
-    def test_generate_signature_with_params(self):
+    def test_generate_signature(self):
         expected_sig = '9d1550bb516ee2cc47d163b4b99f00e15c84b3cd32a82df9fd808aa0eb505f04'
-        params = {'time': 1270503018.33, 'format': 'json'}
+        params = {'time': 1270503018.33}
         url = "/api/publisher/%s/transaction_summary" % TEST_APP_KEY
         sig = self.client.generate_signature(url, params)
         assert_equal(expected_sig, sig)
@@ -83,3 +90,15 @@ class TestClient(TestCase):
         url = "/api/publisher/%s/transaction_summary" % TEST_APP_KEY
         sig = self.client.generate_signature(url)
         assert_equal(expected_sig, sig)
+
+    def test_generate_signature_with_whitelisted_params(self):
+        expected_sig = 'fa5ae4f36a4d90abae0cbbe5fd3d59b73bae6638ff517e9c26be64569c696bcc'
+        url = "/api/publisher/%s/transaction_summary" % TEST_APP_KEY
+        params = {'format': 'json',
+                  'sig': 'this_sig_is_fake!'}
+        sig = self.client.generate_signature(url, params)
+        assert_equal(expected_sig, sig)
+
+    def test_get(self):
+        result = self.client.get("transaction_summary")
+        assert_equal(list, type(result))
