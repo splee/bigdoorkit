@@ -102,3 +102,6 @@ class TestClient(TestCase):
     def test_get(self):
         result = self.client.get("transaction_summary")
         assert_equal(list, type(result))
+        assert_equal(list, type(result[0]))
+        assert_equal(dict, type(result[0][0]))
+        assert_equal(len(result[0][0]), 10)
