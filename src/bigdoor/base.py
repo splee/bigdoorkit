@@ -7,6 +7,7 @@ from bigdoor.exc import MissingClient
 from types import MethodType
 from uuid import uuid4
 from time import time as unix_time
+from datetime import datetime
 
 __all__ = ["Client", "Currency", "Level"]
 
@@ -26,6 +27,12 @@ def get_client(client=None):
     if client is not None:
         return client
     raise MissingClient()
+
+def clean_obj_keys(data):
+    """JSON returns unicode keys which cannot be passed to
+    __init__ methods directly. Here we convert the keys to strings.
+    """
+    return dict([(str(k), v) for k, v in data.items()])
 
 class Client(object):
 
@@ -112,6 +119,7 @@ class BDResource(object):
                  end_user_description=None,
                  created_timestamp=None,
                  modified_timestamp=None,
+                 **kw
                 ):
         self.id = id
         self.pub_title = pub_title
@@ -130,6 +138,7 @@ class BDResource(object):
         # make the delete method an instance method
         self.delete = MethodType(self.__instance_delete, self, self.__class__)
 
+        self._undefined_kw = kw
 
     @classmethod
     def all(cls, client=None):
@@ -143,7 +152,7 @@ class BDResource(object):
                                      getattr(self, cls.parent_id_attr),
                                      cls.endpoint)
         data = client.get(endpoint)
-        return [cls(**i) for i in data]
+        return [cls(**clean_obj_keys(i)) for i in data[0]]
 
     @classmethod
     def get(cls, id, client=None):
@@ -152,7 +161,7 @@ class BDResource(object):
         """
         client = get_client(client)
         data = client.get("%s/%s" % (cls.endpoint, id))
-        return cls(**data)
+        return cls(**clean_obj_keys(data[0]))
 
     def save(self, client=None):
         """Create or Update this object.
@@ -212,15 +221,20 @@ class Currency(BDResource):
                  created_timestamp=None,
                  modified_timestamp=None,
                  currency_type_id=None,
+                 currency_type_description=None,
+                 currency_type_title=None,
                  exchange_rate=None,
                  relative_weight=None,
-                ):
+                 **kw):
         self.currency_type_id = currency_type_id
+        self.currency_type_description = currency_type_description
+        self.currency_type_title = currency_type_title
         self.exchange_rate = exchange_rate
         self.relative_weight = relative_weight
         super(Currency, self).__init__(id, pub_title, pub_description,
                                        end_user_title, end_user_description,
-                                       created_timestamp, modified_timestamp)
+                                       created_timestamp, modified_timestamp,
+                                       **kw)
 
 class Level(BDResource):
     endpoint = "level"
