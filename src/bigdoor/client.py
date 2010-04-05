@@ -7,7 +7,6 @@ from urllib import urlencode
 
 __all__ = ["Client"]
 
-
 class Client(object):
     """Requires `app_secret` and `app_key` as supplied by BigDoor.
     Optional `api_host` parameter allows for use with API compatible
@@ -44,40 +43,66 @@ class Client(object):
         keys.sort()
         return "".join(["%s%s" % (k, params[k]) for k in keys if k not in ('sig', 'format')])
 
-    def _sign_request(self, url, params):
+    def _sign_getish(self, url, params):
+        """Used to sign get-like requests ("GET" and "DELETE")"""
         if params is None:
             params = {}
         if not "time" in params:
             params["time"] = str(unix_time())
-        # force JSON encoding
-        params["format"] = "json"
         sig = self.generate_signature(url, params)
         params["sig"] = sig
         return params
+
+    def _sign_postish(self, url, params):
+        """Used to sign post-like requests ("POST" and "PUT")"""
+        # Split the parameters for use in the query string and the
+        # request body
+        if params is None:
+            params = {}
+        get_keys = ['sig', 'time', 'format']
+        get_params = {}
+        body_params = {}
+        for k, v in params.iteritems():
+            if k in get_keys:
+                get_params[k] = v
+            else:
+                body_params[k] = v
+        if 'time' in get_params:
+            body_params['time'] = get_params['time']
+
+        # add a token if it's missing
+        if not 'token' in body_params:
+            body_params['token'] = self.generate_token()
+        body_params = self._sign_getish(url, body_params)
+        get_params['sig'] = body_params['sig']
+        del body_params['sig']
+        return get_params, body_params
 
     def _abs_from_rel(self, url):
         return "%s/%s" % (self.base_url, url)
 
     def get(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
-        params = self._sign_request(url, params)
+        params = self._sign_getish(url, params)
         r = self.conn.get(url, **params)
         return json.loads(r.body)
 
     def delete(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
-        params = self._sign_request(url, params)
+        params = self._sign_getish(url, params)
         r = self.conn.delete(url, **params)
         return json.loads(r.body)
 
     def post(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
-        params = self._sign_request(url, params)
-        r = self.conn.post(url, **params)
+        get_params, body_params = self._sign_postish(url, params)
+        body = urlencode(body_params)
+        r = self.conn.post(url, payload=body, **get_params)
         return json.loads(r.body)
 
     def put(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
-        params = self._sign_request(url, params)
-        r = self.conn.put(url, **params)
+        get_params, body_params = self._sign_postish(url, params)
+        body = urlencode(body_params)
+        r = self.conn.put(url, payload=body, **params)
         return json.loads(r.body)
