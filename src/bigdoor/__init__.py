@@ -1,4 +1,4 @@
-from base import Client
-__version__ = "0.1"
+from .client import Client
+from .resource import *
 
-__all__ = ["Client"]
+__version__ = "0.1"
