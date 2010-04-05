@@ -3,6 +3,7 @@ import hashlib
 import json
 from uuid import uuid4
 from time import time as unix_time
+from urllib import urlencode
 
 __all__ = ["Client"]
 
@@ -26,7 +27,7 @@ class Client(object):
         self.conn = restkit.Resource(self.api_host)
 
     def generate_token(self):
-        return str(uuid4())
+        return uuid4().hex
 
     def generate_signature(self, url, params=None):
         """Generates the appropriate signature given a url and optional
