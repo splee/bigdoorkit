@@ -24,7 +24,6 @@ class Client(object):
         self.api_host = api_host
         self.base_url = "/api/publisher/%s" % self.app_key
         self.conn = restkit.Resource(self.api_host)
-        __client_weakref = weakref.ref(self)
 
     def generate_token(self):
         return str(uuid4())
