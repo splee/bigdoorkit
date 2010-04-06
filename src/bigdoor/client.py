@@ -28,12 +28,14 @@ class Client(object):
     def generate_token(self):
         return uuid4().hex
 
-    def generate_signature(self, url, params=None):
+    def generate_signature(self, url, query_params=None, body_params=None):
         """Generates the appropriate signature given a url and optional
         params."""
         sig = url
-        if params:
-            sig += self._flatten_params(params)
+        if query_params:
+            sig += self._flatten_params(query_params)
+        if body_params:
+            sig += self._flatten_params(body_params)
         sig += self.app_secret
         return hashlib.sha256(sig).hexdigest()
 
@@ -59,24 +61,29 @@ class Client(object):
         # request body
         if params is None:
             params = {}
-        get_keys = ['sig', 'time', 'format']
-        get_params = {}
+        query_keys = ['sig', 'time', 'format']
+        query_params = {}
         body_params = {}
         for k, v in params.iteritems():
-            if k in get_keys:
-                get_params[k] = v
+            if k in query_keys:
+                query_params[k] = v
             else:
                 body_params[k] = v
-        if 'time' in get_params:
-            body_params['time'] = get_params['time']
+
+        # add a time if it's missing
+        if not 'time' in query_params and not 'time' in body_params:
+            body_params['time'] = query_params['time'] = str(unix_time())
+        elif 'time' in query_params:
+            body_params['time'] = query_params['time']
+        else:
+            query_params['time'] = body_params['time']
 
         # add a token if it's missing
         if not 'token' in body_params:
             body_params['token'] = self.generate_token()
-        body_params = self._sign_getish(url, body_params)
-        get_params['sig'] = body_params['sig']
-        del body_params['sig']
-        return get_params, body_params
+
+        query_params['sig'] = self.generate_signature(url, query_params, body_params)
+        return query_params, body_params
 
     def _abs_from_rel(self, url):
         return "%s/%s" % (self.base_url, url)
@@ -96,13 +103,12 @@ class Client(object):
     def post(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
         get_params, body_params = self._sign_postish(url, params)
-        body = urlencode(body_params)
-        r = self.conn.post(url, payload=body, **get_params)
+        r = self.conn.post(url, payload=body_params, **get_params)
         return json.loads(r.body)
 
     def put(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
         get_params, body_params = self._sign_postish(url, params)
-        body = urlencode(body_params)
-        r = self.conn.put(url, payload=body, **params)
+        #raise Exception("\nquery: %s\nbody: %s" % (get_params, body_params))
+        r = self.conn.put(url, payload=body_params, **get_params)
         return json.loads(r.body)
