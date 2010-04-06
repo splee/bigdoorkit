@@ -1,4 +1,5 @@
 from nose.tools import assert_equal
+from nose import SkipTest
 from unittest import TestCase
 import os
 
@@ -39,7 +40,8 @@ class MockRestkitResource(object):
         here = __file__.split("/")
         here = "/".join(here[:-1])
 
-        short_endpoint = "_".join(endpoint.split("/")[4:])
+        short_endpoint = "%s_" % method
+        short_endpoint += "_".join(endpoint.split("/")[4:])
         short_endpoint += ".json"
 
         path = os.path.join(here, "data", short_endpoint)
@@ -99,9 +101,30 @@ class TestClient(TestCase):
         sig = self.client.generate_signature(url, params)
         assert_equal(expected_sig, sig)
 
+    def test_generate_signature_with_post_params(self):
+        from time import time
+        expected_sig = 'cd073723c4901b57466694f63a2b7746caf1836c9bcdd4f98d55357334c2de64'
+        url = "/api/publisher/%s/currency/1" % TEST_APP_KEY
+        query_params = {'format': 'json',
+                        'time': '1270517162.52'}
+        body_params = {'end_user_description': 'Testing signature generation.',
+                       'time': '1270517162.52',
+                       'token': 'bd323c0ca7c64277ba2b0cd9f93fe463'}
+        sig = self.client.generate_signature(url, query_params, body_params)
+        assert_equal(expected_sig, sig)
+
     def test_get(self):
         result = self.client.get("transaction_summary")
-        assert_equal(list, type(result))
-        assert_equal(list, type(result[0]))
-        assert_equal(dict, type(result[0][0]))
         assert_equal(len(result[0][0]), 10)
+
+    def test_delete(self):
+        raise SkipTest()
+        result = self.client.delete("currency/1")
+
+    def test_post(self):
+        raise SkipTest()
+        result = self.client.post("currency")
+
+    def test_put(self):
+        raise SkipTest()
+        result = self.client.put("currency/1")

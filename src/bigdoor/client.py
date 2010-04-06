@@ -56,7 +56,12 @@ class Client(object):
         return params
 
     def _sign_postish(self, url, params):
-        """Used to sign post-like requests ("POST" and "PUT")"""
+        """Used to sign post-like requests ("POST" and "PUT")
+
+        This method automatically splits the parameters that are
+        required in the query string from the rest of the parameters
+        and signs the request's data appropriately.
+        """
         # Split the parameters for use in the query string and the
         # request body
         if params is None:
