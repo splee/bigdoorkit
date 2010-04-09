@@ -1,6 +1,10 @@
 import restkit
 import hashlib
-import json
+try:
+    import json
+except ImportError, e:
+    import simplejson as json
+
 from uuid import uuid4
 from time import time as unix_time
 from urllib import urlencode
