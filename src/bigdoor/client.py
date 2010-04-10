@@ -97,27 +97,39 @@ class Client(object):
     def _abs_from_rel(self, url):
         return "%s/%s" % (self.base_url, url)
 
-    def get(self, endpoint, params=None):
+    def _get(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
         params = self._sign_getish(url, params)
-        r = self.conn.get(url, **params)
+        return self.conn.get(url, **params)
+
+    def get(self, endpoint, params=None):
+        r = self._get(endpoint, params)
         return json.loads(r.body)
+
+    def _delete(self, endpoint, params=None):
+        url = self._abs_from_rel(endpoint)
+        params = self._sign_getish(url, params)
+        return self.conn.delete(url, **params)
 
     def delete(self, endpoint, params=None):
-        url = self._abs_from_rel(endpoint)
-        params = self._sign_getish(url, params)
-        r = self.conn.delete(url, **params)
+        r = self._delete(endpoint, params)
         return json.loads(r.body)
 
-    def post(self, endpoint, params=None):
+    def _post(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
         get_params, body_params = self._sign_postish(url, params)
-        r = self.conn.post(url, payload=body_params, **get_params)
+        return self.conn.post(url, payload=body_params, **get_params)
+
+    def post(self, endpoint, params=None):
+        r = self._post(endpoint, params)
         return json.loads(r.body)
 
-    def put(self, endpoint, params=None):
+    def _put(self, endpoint, params=None):
         url = self._abs_from_rel(endpoint)
         get_params, body_params = self._sign_postish(url, params)
         #raise Exception("\nquery: %s\nbody: %s" % (get_params, body_params))
-        r = self.conn.put(url, payload=body_params, **get_params)
+        return self.conn.put(url, payload=body_params, **get_params)
+
+    def put(self, endpoint, params=None):
+        r = self._put(endpoint, params)
         return json.loads(r.body)
