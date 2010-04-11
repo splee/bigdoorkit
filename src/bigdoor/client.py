@@ -32,14 +32,14 @@ class Client(object):
     def generate_token(self):
         return uuid4().hex
 
-    def generate_signature(self, url, query_params=None, body_params=None):
+    def generate_signature(self, url, params=None, payload=None):
         """Generates the appropriate signature given a url and optional
         params."""
         sig = url
-        if query_params:
-            sig += self._flatten_params(query_params)
-        if body_params:
-            sig += self._flatten_params(body_params)
+        if params:
+            sig += self._flatten_params(params)
+        if payload:
+            sig += self._flatten_params(payload)
         sig += self.app_secret
         return hashlib.sha256(sig).hexdigest()
 
@@ -49,87 +49,49 @@ class Client(object):
         keys.sort()
         return "".join(["%s%s" % (k, params[k]) for k in keys if k not in ('sig', 'format')])
 
-    def _sign_getish(self, url, params):
-        """Used to sign get-like requests ("GET" and "DELETE")"""
+    def _sign_request(self, method, url, params=None, payload=None):
         if params is None:
             params = {}
-        if not "time" in params:
-            params["time"] = str(unix_time())
-        sig = self.generate_signature(url, params)
-        params["sig"] = sig
-        return params
+        is_postish = method in ['post', 'put']
 
-    def _sign_postish(self, url, params):
-        """Used to sign post-like requests ("POST" and "PUT")
+        # The payload time is assumed to be the correct value
+        if is_postish and 'time' in payload:
+            params['time'] = payload['time']
+        if not 'time' in params:
+            params['time'] = str(unix_time())
+        if is_postish and not 'time' in payload:
+            payload['time'] = params['time']
 
-        This method automatically splits the parameters that are
-        required in the query string from the rest of the parameters
-        and signs the request's data appropriately.
-        """
-        # Split the parameters for use in the query string and the
-        # request body
-        if params is None:
-            params = {}
-        query_keys = ['sig', 'time', 'format']
-        query_params = {}
-        body_params = {}
-        for k, v in params.iteritems():
-            if k in query_keys:
-                query_params[k] = v
-            else:
-                body_params[k] = v
+        if is_postish and not 'token' in payload:
+            payload['token'] = self.generate_token()
 
-        # add a time if it's missing
-        if not 'time' in query_params and not 'time' in body_params:
-            body_params['time'] = query_params['time'] = str(unix_time())
-        elif 'time' in query_params:
-            body_params['time'] = query_params['time']
-        else:
-            query_params['time'] = body_params['time']
-
-        # add a token if it's missing
-        if not 'token' in body_params:
-            body_params['token'] = self.generate_token()
-
-        query_params['sig'] = self.generate_signature(url, query_params, body_params)
-        return query_params, body_params
+        params['sig'] = self.generate_signature(url, params, payload)
+        return params, payload
 
     def _abs_from_rel(self, url):
         return "%s/%s" % (self.base_url, url)
 
-    def _get(self, endpoint, params=None):
+    def do_request(self, method, endpoint, params=None, payload=None):
+        method = method.lower()
         url = self._abs_from_rel(endpoint)
-        params = self._sign_getish(url, params)
-        return self.conn.get(url, **params)
+        params, payload = self._sign_request(method, url, params, payload)
+        func = getattr(self.conn, method)
+        if method in ['post', 'put']:
+            params['payload'] = payload
+        return func(url, **params)
 
     def get(self, endpoint, params=None):
-        r = self._get(endpoint, params)
+        r = self.do_request('get', endpoint, params)
         return json.loads(r.body)
-
-    def _delete(self, endpoint, params=None):
-        url = self._abs_from_rel(endpoint)
-        params = self._sign_getish(url, params)
-        return self.conn.delete(url, **params)
 
     def delete(self, endpoint, params=None):
-        r = self._delete(endpoint, params)
+        r = self.do_request('delete', endpoint, params)
         return json.loads(r.body)
 
-    def _post(self, endpoint, params=None):
-        url = self._abs_from_rel(endpoint)
-        get_params, body_params = self._sign_postish(url, params)
-        return self.conn.post(url, payload=body_params, **get_params)
-
-    def post(self, endpoint, params=None):
-        r = self._post(endpoint, params)
+    def post(self, endpoint, params=None, payload=None):
+        r = self.do_request('post', endpoint, params, payload)
         return json.loads(r.body)
 
-    def _put(self, endpoint, params=None):
-        url = self._abs_from_rel(endpoint)
-        get_params, body_params = self._sign_postish(url, params)
-        #raise Exception("\nquery: %s\nbody: %s" % (get_params, body_params))
-        return self.conn.put(url, payload=body_params, **get_params)
-
-    def put(self, endpoint, params=None):
-        r = self._put(endpoint, params)
+    def put(self, endpoint, params=None, payload=None):
+        r = self.do_request('put', endpoint, params, payload)
         return json.loads(r.body)
