@@ -1,7 +1,7 @@
-from bigdoor.client import Client
+from bigdoorkit.client import Client
+from bigdoorkit.exc import MissingClient
 from datetime import datetime
 from types import MethodType
-from bigdoor.exc import MissingClient
 
 __all__ = ["EndUser", "Currency", "Level", "NamedLevelCollection",
            "NamedLevel", "NamedGoodCollection", "NamedGood", "Good",
