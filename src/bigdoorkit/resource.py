@@ -1,4 +1,4 @@
-from .client import Client
+from bigdoor.client import Client
 from datetime import datetime
 from types import MethodType
 from bigdoor.exc import MissingClient

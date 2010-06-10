@@ -15,16 +15,20 @@ install_requires = [
 ]
 
 
-setup(name='bigdoor',
+setup(name='bigdoorkit',
     version=version,
-    description="Client library for the BigDoor API",
+    description="Client library for the BigDoor API, based on RESTkit",
     long_description=README + '\n\n' + NEWS,
     classifiers=[
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
     ],
     keywords='',
     author='Lee McFadden',
-    author_email='lee@bigdoor.com',
+    author_email='spleeman@gmail.com',
     url='http://bitbucket.org/splee/bigdoor',
     license='MIT',
     packages=find_packages('src'),
@@ -33,6 +37,6 @@ setup(name='bigdoor',
     install_requires=install_requires,
     entry_points={
         'console_scripts':
-            ['bigdoor=bigdoor:main']
+            ['bigdoorkit=bigdoorkit:main']
     }
 )

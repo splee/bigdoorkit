@@ -69,7 +69,7 @@ import restkit
 _original_resource = restkit.Resource
 restkit.Resource = MockRestkitResource
 
-from bigdoor import Client
+from bigdoorkit import Client
 
 class TestClient(TestCase):
     def setUp(self):

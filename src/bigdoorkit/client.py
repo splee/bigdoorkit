@@ -9,6 +9,9 @@ from uuid import uuid4
 from time import time as unix_time
 from urllib import urlencode
 
+import logging
+logging.basicConfig(filename='client_log.txt', level=logging.DEBUG)
+
 __all__ = ["Client"]
 
 class Client(object):
