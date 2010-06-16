@@ -1,5 +1,5 @@
 from bigdoorkit.client import Client
-from bigdoorkit.exc import MissingClient
+from bigdoorkit.exc import MissingClient, MissingParentDetails
 from datetime import datetime
 from types import MethodType
 
