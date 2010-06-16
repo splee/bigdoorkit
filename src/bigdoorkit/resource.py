@@ -50,12 +50,12 @@ class BDResource(object):
     @classmethod
     def all(cls, client):
         """Retrives all of the available objects"""
-        if cls.parent_class and not getattr(self, cls.parent_id_attr, None):
+        if cls.parent_class and not getattr(cls, cls.parent_id_attr, None):
             raise MissingParentDetails()
         endpoint = cls.endpoint
         if cls.parent_class:
             endpoint = "%s/%s/%s" % (cls.parent_class.endpoint,
-                                     getattr(self, cls.parent_id_attr),
+                                     getattr(cls, cls.parent_id_attr),
                                      cls.endpoint)
         data = client.get(endpoint)
         return [cls(**clean_obj_keys(i)) for i in data[0]]
