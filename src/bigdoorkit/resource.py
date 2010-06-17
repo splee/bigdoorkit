@@ -3,6 +3,11 @@ from bigdoorkit.exc import MissingClient, MissingParentDetails
 from datetime import datetime
 from types import MethodType
 
+######
+# WARNING: This code is under heavy developemnt and is not yet intended
+# for public consumption.
+######
+
 __all__ = ["EndUser", "Currency", "Level", "NamedLevelCollection",
            "NamedLevel", "NamedGoodCollection", "NamedGood", "Good",
            "NamedAwardCollection", "NamedAward", "Award"]
