@@ -19,7 +19,13 @@ class Client(object):
     def __init__(self, app_secret, app_key, api_host=None):
         """Constructor for a `Client` object.
 
-        more docs here please
+        Parameters:
+            - app_secret string The API secret supplied by BigDoor
+
+            - app_key string The API key supplied by BigDoor
+
+            - api_host string An alternative host to enable use with testing
+            servers.
         """
         self.app_secret = app_secret
         self.app_key = app_key
@@ -30,6 +36,8 @@ class Client(object):
         self.conn = restkit.Resource(self.api_host)
 
     def generate_token(self):
+        """Helper method
+        """
         return uuid4().hex
 
     def generate_signature(self, url, params=None, payload=None):
@@ -50,6 +58,18 @@ class Client(object):
                         if k not in ('sig', 'format')])
 
     def _sign_request(self, method, url, params=None, payload=None):
+        """Algorithm to sign a request as per the BigDoor documentation. Adds
+        defaults to `params` and `payload` if not present.
+
+        Parameters:
+            - method string The HTTP method for the request
+
+            - url string The full URL, including the base /api/publisher/[app_key]
+
+            - params dict The parameters to be sent via the GET query string
+
+            - payload dict The data to be sent via the POST body
+        """
         if params is None:
             params = {}
         is_postish = method in ['post', 'put']
@@ -69,9 +89,26 @@ class Client(object):
         return params, payload
 
     def _abs_from_rel(self, url):
+        """Private helper method to concatenate the base url and endpoint.
+        """
         return "%s/%s" % (self.base_url, url)
 
     def do_request(self, method, endpoint, params=None, payload=None):
+        """Sends a request to the API, signing it before it is sent.
+        Returns a restkit response object.
+
+        Parameters:
+            - method string The HTTP method to use for the request. Can be one
+            of ['get', 'delete', 'post', 'put']. Note: case of the string does
+            not matter.
+
+            - endpoint string The relative URI that comes directly after
+            your API key in the BigDoor documentation.
+
+            - params dict The parameters to be sent via the GET query string.
+
+            - payload dict The data to be sent via the POST body
+        """
         method = method.lower()
         url = self._abs_from_rel(endpoint)
         params, payload = self._sign_request(method, url, params, payload)
@@ -81,17 +118,57 @@ class Client(object):
         return func(url, **params)
 
     def get(self, endpoint, params=None):
+        """Sends a GET request to the API and returns a native data
+        structure from the JSON response.
+
+        Parameters:
+            - endpoint string The relative URI that comes directly after
+            your API key in the BigDoor documentation.
+
+            - params dict The parameters to be sent via the GET query string.
+        """
         r = self.do_request('get', endpoint, params)
         return json.loads(r.body)
 
     def delete(self, endpoint, params=None):
+        """Sends a DELETE request to the API and returns a native data
+        structure from the JSON response.
+
+        Parameters:
+            - endpoint string The relative URI that comes directly after
+            your API key in the BigDoor documentation.
+
+            - params dict The parameters to be sent via the GET query string.
+        """
         r = self.do_request('delete', endpoint, params)
         return json.loads(r.body)
 
     def post(self, endpoint, params=None, payload=None):
+        """Sends a POST request to the API and returns a native data
+        structure from the JSON response.
+
+        Parameters:
+            - endpoint string The relative URI that comes directly after
+            your API key in the BigDoor documentation.
+
+            - params dict The parameters to be sent via the GET query string.
+
+            - payload dict The data to be sent via the POST body
+        """
         r = self.do_request('post', endpoint, params, payload)
         return json.loads(r.body)
 
     def put(self, endpoint, params=None, payload=None):
+        """Sends a PUT request to the API and returns a native data
+        structure from the JSON response.
+
+        Parameters:
+            - endpoint string The relative URI that comes directly after
+            your API key in the BigDoor documentation.
+
+            - params dict The parameters to be sent via the GET query string.
+
+            - payload dict The data to be sent via the POST body
+        """
         r = self.do_request('put', endpoint, params, payload)
         return json.loads(r.body)
