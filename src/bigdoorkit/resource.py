@@ -88,12 +88,13 @@ class BDResource(object):
 
     def __class_delete(cls, id, client=None):
         """Deletes an object identified by `id`"""
-        client = get_client(client)
-        client.delete(self.endpoint, id)
+        if client is None:
+            client = get_client()
+        client.delete(cls.endpoint, id)
 
     delete = classmethod(__class_delete)
 
-    def __instance_delete(self, client=None):
+    def __instance_delete(self, obj, client=None):
         # XXX: may need to change to self.__class__.delete(self.id, client)
         return self.__class_delete(self.id, client)
 
