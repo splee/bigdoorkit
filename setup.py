@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 import sys, os
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
+README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
-version = '0.1'
+version = '0.1.1'
 
 install_requires = [
     'restkit',
@@ -27,7 +27,7 @@ setup(name='bigdoorkit',
     keywords='',
     author='Lee McFadden',
     author_email='spleeman@gmail.com',
-    url='http://bitbucket.org/splee/bigdoor',
+    url='http://bitbucket.org/splee/bigdoorkit',
     license='MIT',
     packages=find_packages('src'),
     package_dir = {'': 'src'},include_package_data=True,
