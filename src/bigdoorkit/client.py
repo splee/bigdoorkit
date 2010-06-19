@@ -85,6 +85,9 @@ class Client(object):
         if is_postish and not 'token' in payload:
             payload['token'] = self.generate_token()
 
+        if method == 'delete' and not 'delete_token' in params:
+            params['delete_token'] = self.generate_token()
+
         params['sig'] = self.generate_signature(url, params, payload)
         return params, payload
 
@@ -131,8 +134,7 @@ class Client(object):
         return json.loads(r.body)
 
     def delete(self, endpoint, params=None):
-        """Sends a DELETE request to the API and returns a native data
-        structure from the JSON response.
+        """Sends a DELETE request to the API.
 
         Parameters:
             - endpoint string The relative URI that comes directly after
@@ -141,7 +143,6 @@ class Client(object):
             - params dict The parameters to be sent via the GET query string.
         """
         r = self.do_request('delete', endpoint, params)
-        return json.loads(r.body)
 
     def post(self, endpoint, params=None, payload=None):
         """Sends a POST request to the API and returns a native data
