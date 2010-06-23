@@ -8,7 +8,7 @@ This is a Python client library for the `BigDoor API`_.
 Basic Usage
 -----------
 
-The `bigdoorkit` client requires your keys as provided by BigDoor::
+The ``bigdoorkit`` client requires your keys as provided by BigDoor::
 
     >>> from bigdoorkit import Client
     >>> client = Client(app_secret, app_key)
@@ -64,7 +64,7 @@ The `bigdoorkit` client requires your keys as provided by BigDoor::
 Known Issues
 ------------
 
-* The `resource` module is under heavy development and should not be used for now.
+* The ``resource`` module is under heavy development and should not be used for now.
 * Very little formal documentation.
 * Unit tests are sparse.
 
