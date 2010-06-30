@@ -15,20 +15,14 @@ class BDResource(object):
     parent_id_attr = None
 
     def __init__(self,
-                 id=None,
-                 pub_title=None,
-                 pub_description=None,
-                 end_user_title=None,
-                 end_user_description=None,
-                 created_timestamp=None,
-                 modified_timestamp=None,
-                 **kw
-                ):
-        self.id = id
-        self.pub_title = pub_title
-        self.pub_description = pub_description
-        self.end_user_title = end_user_title
-        self.end_user_description = end_user_description
+                 created_timestamp,
+                 modified_timestamp,
+                 **kw):
+        self.id = kw.get('id', None)
+        self.pub_title = kw.get('pub_title', None)
+        self.pub_description = kw.get('pub_description', None)
+        self.end_user_title = kw.get('end_user_title', None)
+        self.end_user_description = kw.get('end_user_description', None)
 
         if isinstance(created_timestamp, (int, float)):
             created_timestamp = datetime.fromtimestamp(created_timestamp)

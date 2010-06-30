@@ -1,3 +1,4 @@
+^src/bigdoorkit.egg-info/
 syntax: glob
 *.pyc
 *.swp
