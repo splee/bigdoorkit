@@ -32,6 +32,13 @@ class Bunch(dict):
     def __setattr__(self, attr, value):
         self[attr] = value
 
+class MockRestkitResponse(object):
+    def __init__(self, body):
+        self.body = body
+
+    def body_string(self):
+        return self.body
+
 class MockRestkitResource(object):
     def __init__(self, host_str):
         self.host_str = host_str
@@ -47,10 +54,9 @@ class MockRestkitResource(object):
         path = os.path.join(here, "data", short_endpoint)
         path = os.path.abspath(path)
         f = open(path, 'r')
-        data = Bunch()
-        data.body = f.read()
+        resp = MockRestkitResponse(f.read())
         f.close()
-        return data
+        return resp
 
     def get(self, endpoint, **params):
         return self.fake_request("get", endpoint, **params)

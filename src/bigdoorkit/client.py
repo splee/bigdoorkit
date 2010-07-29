@@ -112,13 +112,24 @@ class Client(object):
 
             - payload dict The data to be sent via the POST body
         """
+        # Copy the parameters and payload variables so we don't pollute passed
+        # dictionaries with auto-generated API information.
+        par = None
+        pay = None
+        if params is not None:
+            par = params.copy()
+        if payload is not None:
+            pay = payload.copy()
+
         method = method.lower()
         url = self._abs_from_rel(endpoint)
-        params, payload = self._sign_request(method, url, params, payload)
+        par, pay = self._sign_request(method, url, par, pay)
         func = getattr(self.conn, method)
+
         if method in ['post', 'put']:
-            params['payload'] = payload
-        return func(url, **params)
+            par['payload'] = pay
+
+        return func(url, **par)
 
     def get(self, endpoint, params=None):
         """Sends a GET request to the API and returns a native data
@@ -131,7 +142,7 @@ class Client(object):
             - params dict The parameters to be sent via the GET query string.
         """
         r = self.do_request('get', endpoint, params)
-        return json.loads(r.body)
+        return json.loads(r.body_string())
 
     def delete(self, endpoint, params=None):
         """Sends a DELETE request to the API.
@@ -157,7 +168,7 @@ class Client(object):
             - payload dict The data to be sent via the POST body
         """
         r = self.do_request('post', endpoint, params, payload)
-        return json.loads(r.body)
+        return json.loads(r.body_string())
 
     def put(self, endpoint, params=None, payload=None):
         """Sends a PUT request to the API and returns a native data
@@ -172,4 +183,4 @@ class Client(object):
             - payload dict The data to be sent via the POST body
         """
         r = self.do_request('put', endpoint, params, payload)
-        return json.loads(r.body)
+        return json.loads(r.body_string())
