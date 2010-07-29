@@ -122,6 +122,9 @@ class Client(object):
             pay = payload.copy()
 
         method = method.lower()
+        if method in ['post', 'put'] and not isinstance(pay, dict):
+            err_msg = "Payload must be <type 'dict'>, not %s" % type(pay)
+            raise PayloadError(err_msg)
         url = self._abs_from_rel(endpoint)
         par, pay = self._sign_request(method, url, par, pay)
         func = getattr(self.conn, method)
