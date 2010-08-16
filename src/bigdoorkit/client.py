@@ -8,6 +8,7 @@ except ImportError, e:
 from uuid import uuid4
 from time import time as unix_time
 from urllib import urlencode
+from exc import PayloadError
 
 __all__ = ["Client"]
 
@@ -114,8 +115,9 @@ class Client(object):
         """
         # Copy the parameters and payload variables so we don't pollute passed
         # dictionaries with auto-generated API information.
-        par = None
-        pay = None
+        par = {}
+        pay = {}
+
         if params is not None:
             par = params.copy()
         if payload is not None:
