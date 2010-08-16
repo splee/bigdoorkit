@@ -6,10 +6,16 @@
 Welcome to BigDoorKit's documentation!
 ======================================
 
+BigDoorKit is a Python client for use with the BigDoor API.  If you want to gamify your site using Python & BigDoor, this is the place for you.
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   intro
+   contributing
+
 
 Indices and tables
 ==================
