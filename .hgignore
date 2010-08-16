@@ -2,3 +2,7 @@
 syntax: glob
 *.pyc
 *.swp
+bin/buildout
+eggs/**
+dist/**
+build/**
