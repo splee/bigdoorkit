@@ -87,4 +87,3 @@ class TestNamedGood(TestCase):
         assert_equal(ng.end_user_title, 'example good')
         assert_equal(ng.end_user_description, 'something you can purchase')
         assert_equal(ng.id, 6169)
-        assert_equal(ng.id, 6169)
