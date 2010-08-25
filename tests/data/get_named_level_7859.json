@@ -1,0 +1,17 @@
+[
+    {
+        "end_user_description": "you don't know jack", 
+        "named_level_collection_id": 2092, 
+        "modified_timestamp": 1281661237, 
+        "pub_title": "level1", 
+        "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_level_collection/2092", 
+        "created_timestamp": 1281661237, 
+        "resource_name": "named_level", 
+        "urls": [], 
+        "threshold": 1, 
+        "pub_description": "level1 description", 
+        "end_user_title": "novice", 
+        "id": 7859
+    }, 
+    {}
+]

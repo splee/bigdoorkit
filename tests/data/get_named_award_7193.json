@@ -1,0 +1,17 @@
+[
+    {
+        "end_user_description": "congratulations", 
+        "named_award_collection_id": 1920, 
+        "modified_timestamp": 1282003299, 
+        "pub_title": "obligatory early achievement", 
+        "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_award_collection/1920", 
+        "resource_name": "named_award", 
+        "urls": [], 
+        "created_timestamp": 1282003299, 
+        "pub_description": "early achievement", 
+        "end_user_title": "just breath", 
+        "relative_weight": 1, 
+        "id": 7193
+    }, 
+    {}
+]
