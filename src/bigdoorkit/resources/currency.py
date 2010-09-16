@@ -8,5 +8,5 @@ class Currency(BDResource):
         self.currency_type_description = kw.get('currency_type_description', None)
         self.currency_type_title = kw.get('currency_type_title', None)
         self.exchange_rate = kw.get('exchange_rate', None)
-        self.relative_weight = kw.arg('relative_weight', None)
+        self.relative_weight = kw.get('relative_weight', None)
         super(Currency, self).__init__(**kw)

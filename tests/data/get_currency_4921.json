@@ -1,0 +1,19 @@
+[
+    {
+        "end_user_description": "can only be purchased", 
+        "modified_timestamp": 1281659800, 
+        "pub_title": "Coins", 
+        "currency_type_title": "Purchase", 
+        "currency_type_id": 1, 
+        "exchange_rate": "900.00", 
+        "resource_name": "currency", 
+        "urls": [], 
+        "created_timestamp": 1281659800, 
+        "pub_description": "an example of the Purchase currency type", 
+        "end_user_title": "Coins", 
+        "relative_weight": 2, 
+        "id": 4921, 
+        "currency_type_description": null
+    }, 
+    {}
+]

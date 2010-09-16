@@ -1,0 +1,18 @@
+[
+    {
+        "end_user_description": "something you can purchase", 
+        "modified_timestamp": 1282003379, 
+        "pub_title": "example good", 
+        "named_good_collection_id": 1237, 
+        "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_good_collection/1237", 
+        "resource_name": "named_good", 
+        "urls": [], 
+        "attributes": [], 
+        "created_timestamp": 1282003379, 
+        "pub_description": "something you can purchase", 
+        "end_user_title": "example good", 
+        "relative_weight": 1, 
+        "id": 6169
+    }, 
+    {}
+]

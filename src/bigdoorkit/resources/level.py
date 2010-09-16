@@ -6,7 +6,7 @@ class NamedLevelCollection(BDResource):
 
     def __init__(self, **kw):
         self.currency_id = kw.get('currency_id', None)
-        super(NamedLevel, self).__init__(**kw)
+        super(NamedLevelCollection, self).__init__(**kw)
 
 class NamedLevel(BDResource):
     endpoint = "named_level"

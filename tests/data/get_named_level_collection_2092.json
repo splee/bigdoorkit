@@ -1,0 +1,59 @@
+[
+    {
+        "end_user_description": "you must get higher", 
+        "modified_timestamp": 1281661166, 
+        "pub_title": "levels", 
+        "named_levels": [
+            {
+                "end_user_description": "you don't know jack", 
+                "named_level_collection_id": 2092, 
+                "modified_timestamp": 1281661237, 
+                "pub_title": "level1", 
+                "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_level_collection/2092", 
+                "created_timestamp": 1281661237, 
+                "resource_name": "named_level", 
+                "urls": [], 
+                "threshold": 1, 
+                "pub_description": "level1 description", 
+                "end_user_title": "novice", 
+                "id": 7859
+            }, 
+            {
+                "end_user_description": "you kinda know something", 
+                "named_level_collection_id": 2092, 
+                "modified_timestamp": 1282003614, 
+                "pub_title": "level2", 
+                "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_level_collection/2092", 
+                "created_timestamp": 1282003614, 
+                "resource_name": "named_level", 
+                "urls": [], 
+                "threshold": 20, 
+                "pub_description": "level2 description", 
+                "end_user_title": "Neophyte", 
+                "id": 7928
+            }, 
+            {
+                "end_user_description": "you rock", 
+                "named_level_collection_id": 2092, 
+                "modified_timestamp": 1282003643, 
+                "pub_title": "level3", 
+                "collection_uri": "/api/publisher/b1bf60c2bf1a4ae298faa4e4b12acbc0/named_level_collection/2092", 
+                "created_timestamp": 1282003643, 
+                "resource_name": "named_level", 
+                "urls": [], 
+                "threshold": 100, 
+                "pub_description": "level3 example", 
+                "end_user_title": "Expert", 
+                "id": 7929
+            }
+        ], 
+        "currency_id": 4920, 
+        "resource_name": "named_level_collection", 
+        "urls": [], 
+        "created_timestamp": 1281661166, 
+        "pub_description": "example levels", 
+        "end_user_title": "levels", 
+        "id": 2092
+    }, 
+    {}
+]

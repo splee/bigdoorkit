@@ -3,3 +3,7 @@ syntax: glob
 *.pyc
 *.swp
 docs/_build
+bin/buildout
+eggs/**
+dist/**
+build/**
