@@ -5,6 +5,8 @@ This is a Python client library for the `BigDoor API`_.
 
 .. _BigDoor API: http://www.bigdoor.com/
 
+For more information and docs, visit http://bigdoorkit.com/
+
 Basic Usage
 -----------
 
