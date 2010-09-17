@@ -1,6 +1,13 @@
 News
 ====
 
+0.1.4
+-----
+
+*Release date: 16-Sep-2010*
+
+* Fixed an issue with a missing file in MANIFEST.in which prevented zc.buildout installation
+
 0.1.3
 -----
 
