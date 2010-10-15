@@ -1,4 +1,8 @@
-import restkit
+try:
+    import restkit
+except ImportError, e:
+    import fetchkit as restkit
+
 import hashlib
 try:
     import json
@@ -7,7 +11,6 @@ except ImportError, e:
 
 from uuid import uuid4
 from time import time as unix_time
-from urllib import urlencode
 from exc import PayloadError
 
 __all__ = ["Client"]
