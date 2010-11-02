@@ -15,6 +15,7 @@ class NamedAward(BDResource):
         self.collection_resource_uri = kw.get('collection_resource_uri', None)
         super(NamedAward, self).__init__(**kw)
 
+
 class Award(BDResource):
     endpoint = "award"
     parent_class = EndUser

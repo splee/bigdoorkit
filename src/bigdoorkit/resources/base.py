@@ -13,11 +13,14 @@ class BDResource(object):
     endpoint = None
     parent_class = None
     parent_id_attr = None
-
+    
     def __init__(self,
                  created_timestamp,
                  modified_timestamp,
                  **kw):
+
+        self.bd_keys=kw.keys()
+
         self.id = kw.get('id', None)
         self.pub_title = kw.get('pub_title', None)
         self.pub_description = kw.get('pub_description', None)
@@ -58,6 +61,13 @@ class BDResource(object):
         data = client.get("%s/%s" % (cls.endpoint, id))
         return cls(**clean_obj_keys(data[0]))
 
+    def to_dict(self):
+        temp = {}
+        for attr in self.bd_keys:
+            if attr in self.__dict__:
+                temp[attr] = self.__dict__[attr]
+        return temp
+
     def save(self, client):
         """Create or Update this object.
 
@@ -65,20 +75,19 @@ class BDResource(object):
         the HTTP method will be POST.
         """
         if not self.id:
-            client.post(self.endpoint, self.to_dict())
+            client.post(self.endpoint, payload=self.to_dict())
         else:
-            data = client.put(self.endpoint, self.to_dict())
+            data = client.put(self.endpoint + ('/%s' % self.id), 
+                              payload=self.to_dict())
             # XXX: This is pretty dirty. We'll see how it works out.
             self = self.__class__(**data)
 
-    def __class_delete(cls, id, client=None):
+    def __class_delete(cls, id, client):
         """Deletes an object identified by `id`"""
-        if client is None:
-            client = get_client()
         client.delete(cls.endpoint, id)
 
     delete = classmethod(__class_delete)
 
-    def __instance_delete(self, obj, client=None):
+    def __instance_delete(self, obj):
         # XXX: may need to change to self.__class__.delete(self.id, client)
         return self.__class_delete(self.id, client)
