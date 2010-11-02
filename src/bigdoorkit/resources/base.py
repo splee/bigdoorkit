@@ -79,8 +79,9 @@ class BDResource(object):
         else:
             data = client.put(self.endpoint + ('/%s' % self.id), 
                               payload=self.to_dict())
+
             # XXX: This is pretty dirty. We'll see how it works out.
-            self = self.__class__(**data)
+            self = self.__class__(**(data[0]))
 
     def __class_delete(cls, id, client):
         """Deletes an object identified by `id`"""
@@ -88,6 +89,6 @@ class BDResource(object):
 
     delete = classmethod(__class_delete)
 
-    def __instance_delete(self, obj):
+    def __instance_delete(self, client):
         # XXX: may need to change to self.__class__.delete(self.id, client)
         return self.__class_delete(self.id, client)
