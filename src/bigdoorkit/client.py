@@ -133,7 +133,6 @@ class Client(object):
         url = self._abs_from_rel(endpoint)
         par, pay = self._sign_request(method, url, par, pay)
         func = getattr(self.conn, method)
-        print url
         if method in ['post', 'put']:
             par['payload'] = pay
 
