@@ -57,7 +57,7 @@ class Client(object):
 
     def _flatten_params(self, params):
         """Flattens a parameter dictionary for signature generation"""
-        return ''.join(["%s%s" % (k, params[k])
+        return ''.join(["%s%s" % (k, (params[k] if params[k] is not None else ''))
                         for k in sorted(params.keys())
                         if k not in ('sig', 'format')])
 

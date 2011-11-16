@@ -1,6 +1,14 @@
 News
 ====
 
+0.1.5
+-----
+
+*Release date: 16-Nov-2011*
+
+* RESTkit version must now be >= 3.3.2 to address None values being converted to strings
+* When signing a request, None values are converted to empty strings
+
 0.1.4
 -----
 
