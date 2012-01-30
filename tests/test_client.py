@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from nose.tools import assert_equal
 from nose import SkipTest
 from unittest import TestCase
@@ -45,6 +47,24 @@ class TestClient(TestCase):
         body_params = {'end_user_description': 'Testing signature generation.',
                        'time': '1270517162.52',
                        'token': 'bd323c0ca7c64277ba2b0cd9f93fe463'}
+        sig = self.client.generate_signature(url, query_params, body_params)
+        assert_equal(expected_sig, sig)
+
+    def test_generate_signature_with_unicode(self):
+        expected_sig = 'bc41b88b9cf85434893169cd844da161530ee645fc18dc64c51568ed3b0de075'
+        url = "/api/publisher/%s/currency/1" % TEST_APP_KEY
+
+        title = 'Bashō\'s "old pond"'.decode('utf-8')
+        description = '古池や蛙飛込む水の音'.decode('utf-8')
+
+        query_params = {'format': 'json',
+                        'time': '1270517162.52'}
+
+        body_params = {'end_user_title': title,
+                       'end_user_description': description,
+                       'time': '1270517162.52',
+                       'token': 'bd323c0ca7c64277ba2b0cd9f93fe463'}
+
         sig = self.client.generate_signature(url, query_params, body_params)
         assert_equal(expected_sig, sig)
 

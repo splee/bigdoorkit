@@ -53,6 +53,10 @@ class Client(object):
         if payload:
             sig += self._flatten_params(payload)
         sig += self.app_secret
+
+        if isinstance(sig, unicode):
+           sig = sig.encode("utf8")
+
         return hashlib.sha256(sig).hexdigest()
 
     def _flatten_params(self, params):
