@@ -146,14 +146,12 @@ class Client(object):
         # add the GET parameters to the requests kwargs
         kwargs['params'] = par
 
-        # get the function to make the request
-        func = getattr(requests, method)
-
         # PUT/POST requests require a body.
         if method in ['post', 'put']:
             kwargs['data'] = pay
 
-        resp = func(url, **kwargs)
+        resp = requests.request(method, url, **kwargs)
+
         # check to see that the response code is good
         resp.raise_for_status()
         return resp
