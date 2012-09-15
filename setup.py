@@ -9,7 +9,7 @@ NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 version = '0.1.5'
 
 install_requires = [
-    'restkit >= 3.3.2',
+    'requests',
 ]
 
 
