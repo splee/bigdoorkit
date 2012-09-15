@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BigDoorKit Documentation &mdash; BigDoorKit 0.1.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="BigDoorKit 0.1.4 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">BigDoorKit 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bigdoorkit-documentation">
+<h1>BigDoorKit Documentation<a class="headerlink" href="#bigdoorkit-documentation" title="Permalink to this headline">¶</a></h1>
+<p>BigDoorKit provides a pure python interface for BigDoor&#8217;s REST API.</p>
+<p>The <a class="reference external" href="http://www.bigdoor.com/">BigDoor</a> Platform allows developers to create and manage a virtual economy and meta-games for non-game websites.  The process of adding a meta-game layer to a website is commonly known as &#8220;gamification&#8221;.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>BigDoorKit is available on pypi and can be installed with your favorite package installer.  To install via <tt class="docutils literal"><span class="pre">easy_install</span></tt>:</p>
+<div class="highlight-python"><pre>easy_install -U bigdoorkit</pre>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">bigdoorkit</span></tt> client requires your app key and secret key as provided by BigDoor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bigdoorkit</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_secret</span><span class="p">,</span> <span class="n">app_key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The client instance can then be used to access any of the endpoints mentioned in the <a class="reference external" href="http://publisher.bigdoor.com/docs/endpoints">BigDoor documentation</a> (requires signup).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The Client object provided by bigdoorkit allows you to discard the &#8220;boilerplate&#8221; section of the REST URLs shown in the BigDoor documentation.  This means that instead of using <tt class="docutils literal"><span class="pre">/api/publisher/[app_key]/currency_type</span></tt> as the <tt class="docutils literal"><span class="pre">endpoint</span></tt> parameter, you should pass the relative endpoint, i.e. <tt class="docutils literal"><span class="pre">currency_type</span></tt>.</p>
+</div>
+<p>Since the <tt class="docutils literal"><span class="pre">currency_type</span></tt> endpoint is managed entirely by BigDoor you should be able to make the following request and get the same results without having to set up any information in your economy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">currency_types</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;currency_type&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">currency_types</span><span class="p">)</span>
+<span class="go">[[{u&#39;can_be_cross_publisher&#39;: 0,</span>
+<span class="go">   u&#39;can_be_purchased&#39;: 1,</span>
+<span class="go">   u&#39;can_be_rewarded&#39;: 0,</span>
+<span class="go">   u&#39;created_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;description&#39;: None,</span>
+<span class="go">   u&#39;has_dollar_exchange_rate_integrity&#39;: 1,</span>
+<span class="go">   u&#39;id&#39;: 1,</span>
+<span class="go">   u&#39;modified_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;read_only&#39;: 0,</span>
+<span class="go">   u&#39;resource_name&#39;: u&#39;currency_type&#39;,</span>
+<span class="go">   u&#39;title&#39;: u&#39;Purchase&#39;},</span>
+<span class="go">  {u&#39;can_be_cross_publisher&#39;: 0,</span>
+<span class="go">   u&#39;can_be_purchased&#39;: 0,</span>
+<span class="go">   u&#39;can_be_rewarded&#39;: 1,</span>
+<span class="go">   u&#39;created_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;description&#39;: None,</span>
+<span class="go">   u&#39;has_dollar_exchange_rate_integrity&#39;: 0,</span>
+<span class="go">   u&#39;id&#39;: 2,</span>
+<span class="go">   u&#39;modified_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;read_only&#39;: 0,</span>
+<span class="go">   u&#39;resource_name&#39;: u&#39;currency_type&#39;,</span>
+<span class="go">   u&#39;title&#39;: u&#39;Reward&#39;},</span>
+<span class="go">  {u&#39;can_be_cross_publisher&#39;: 0,</span>
+<span class="go">   u&#39;can_be_purchased&#39;: 1,</span>
+<span class="go">   u&#39;can_be_rewarded&#39;: 1,</span>
+<span class="go">   u&#39;created_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;description&#39;: u&#39;&#39;,</span>
+<span class="go">   u&#39;has_dollar_exchange_rate_integrity&#39;: 0,</span>
+<span class="go">   u&#39;id&#39;: 3,</span>
+<span class="go">   u&#39;modified_timestamp&#39;: 1264002256,</span>
+<span class="go">   u&#39;read_only&#39;: 0,</span>
+<span class="go">   u&#39;resource_name&#39;: u&#39;currency_type&#39;,</span>
+<span class="go">   u&#39;title&#39;: u&#39;Hybrid&#39;},</span>
+<span class="go">  {u&#39;can_be_cross_publisher&#39;: 1,</span>
+<span class="go">   u&#39;can_be_purchased&#39;: 0,</span>
+<span class="go">   u&#39;can_be_rewarded&#39;: 0,</span>
+<span class="go">   u&#39;created_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;description&#39;: None,</span>
+<span class="go">   u&#39;has_dollar_exchange_rate_integrity&#39;: 1,</span>
+<span class="go">   u&#39;id&#39;: 4,</span>
+<span class="go">   u&#39;modified_timestamp&#39;: 1263933875,</span>
+<span class="go">   u&#39;read_only&#39;: 0,</span>
+<span class="go">   u&#39;resource_name&#39;: u&#39;currency_type&#39;,</span>
+<span class="go">   u&#39;title&#39;: u&#39;\xdcber&#39;}],</span>
+<span class="go"> {}]</span>
+</pre></div>
+</div>
+<p>To get a specific object you simply add a valid ID to the endpoint:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reward_type</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;currency_type/2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">reward_type</span><span class="p">)</span>
+<span class="go">[{u&#39;can_be_cross_publisher&#39;: 0,</span>
+<span class="go">  u&#39;can_be_purchased&#39;: 0,</span>
+<span class="go">  u&#39;can_be_rewarded&#39;: 1,</span>
+<span class="go">  u&#39;created_timestamp&#39;: 1263933875,</span>
+<span class="go">  u&#39;description&#39;: u&#39;&#39;,</span>
+<span class="go">  u&#39;has_dollar_exchange_rate_integrity&#39;: 0,</span>
+<span class="go">  u&#39;id&#39;: 2,</span>
+<span class="go">  u&#39;modified_timestamp&#39;: 1263933875,</span>
+<span class="go">  u&#39;read_only&#39;: 0,</span>
+<span class="go">  u&#39;resource_name&#39;: u&#39;currency_type&#39;,</span>
+<span class="go">  u&#39;title&#39;: u&#39;Redeemable Reward Currency&#39;},</span>
+<span class="go"> {}]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>To contribute to BigDoorKit&#8217;s development, please head to the official <a class="reference external" href="http://bitbucket.org/splee/bigdoorkit">BitBucket project page</a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BigDoorKit Documentation</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">BigDoorKit 0.1.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Lee McFadden.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
