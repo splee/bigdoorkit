@@ -102,7 +102,7 @@ class Client(object):
     def _abs_from_rel(self, url):
         """Private helper method to concatenate the base url and endpoint.
         """
-        return "%s/%s/%s" % (self.api_host, self.base_url, url)
+        return "%s/%s" % (self.base_url, url)
 
     def do_request(self, method, endpoint, params=None, payload=None):
         """Sends a request to the API, signing it before it is sent.
@@ -137,7 +137,8 @@ class Client(object):
             err_msg = "Payload must be <type 'dict'>, not %s" % type(pay)
             raise PayloadError(err_msg)
 
-        # get the full url, including host
+        # get the url without the domain, including the boilerplate API key
+        # root.
         url = self._abs_from_rel(endpoint)
 
         # sign the request parameters/payload
@@ -150,6 +151,8 @@ class Client(object):
         if method in ['post', 'put']:
             kwargs['data'] = pay
 
+        # add the host to the url as the last step
+        url = "%s/%s" % (self.api_host, url)
         resp = requests.request(method, url, **kwargs)
 
         # check to see that the response code is good
