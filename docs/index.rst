@@ -105,6 +105,6 @@ To get a specific object you simply add a valid ID to the endpoint::
 Contributing
 ============
 
-To contribute to BigDoorKit's development, please head to the official `BitBucket project page`_.
+To contribute to BigDoorKit's development, please head to the official `Github project page`_.
 
-.. _BitBucket project page: http://bitbucket.org/splee/bigdoorkit
+.. _Github project page: http://github.com/splee/bigdoorkit
