@@ -50,7 +50,7 @@ class Client(object):
 
         Args:
             url (str): The URL from the host root onwards (e.g. \
-                    /api/publisher/deadbeef1234567890defafbad12345/currency_type)
+                    /api/publisher/[app_key]/currency_type)
 
         Kwargs:
             params (dict): GET parameters for the request.
