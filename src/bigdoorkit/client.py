@@ -1,8 +1,4 @@
-try:
-    import restkit
-except ImportError, e:
-    import fetchkit as restkit
-
+import requests
 import hashlib
 try:
     import json
@@ -34,10 +30,14 @@ class Client(object):
         self.app_secret = app_secret
         self.app_key = app_key
         if not api_host:
-            api_host = "http://api.bigdoor.com"
+            api_host = "http://loyalty.bigdoor.com"
+
+        if api_host.endswith('/'):
+            # we don't want a trailing slash, so ditch it
+            api_host = api_host[:-1]
+
         self.api_host = api_host
         self.base_url = "/api/publisher/%s" % self.app_key
-        self.conn = restkit.Resource(self.api_host)
 
     def generate_token(self):
         """Helper method
@@ -102,7 +102,7 @@ class Client(object):
     def _abs_from_rel(self, url):
         """Private helper method to concatenate the base url and endpoint.
         """
-        return "%s/%s" % (self.base_url, url)
+        return "%s/%s/%s" % (self.api_host, self.base_url, url)
 
     def do_request(self, method, endpoint, params=None, payload=None):
         """Sends a request to the API, signing it before it is sent.
@@ -125,6 +125,8 @@ class Client(object):
         par = {}
         pay = {}
 
+        kwargs = {}
+
         if params is not None:
             par = params.copy()
         if payload is not None:
@@ -134,13 +136,27 @@ class Client(object):
         if method in ['post', 'put'] and not isinstance(pay, dict):
             err_msg = "Payload must be <type 'dict'>, not %s" % type(pay)
             raise PayloadError(err_msg)
-        url = self._abs_from_rel(endpoint)
-        par, pay = self._sign_request(method, url, par, pay)
-        func = getattr(self.conn, method)
-        if method in ['post', 'put']:
-            par['payload'] = pay
 
-        return func(url, **par)
+        # get the full url, including host
+        url = self._abs_from_rel(endpoint)
+
+        # sign the request parameters/payload
+        par, pay = self._sign_request(method, url, par, pay)
+
+        # add the GET parameters to the requests kwargs
+        kwargs['params'] = par
+
+        # get the function to make the request
+        func = getattr(requests, method)
+
+        # PUT/POST requests require a body.
+        if method in ['post', 'put']:
+            kwargs['data'] = pay
+
+        resp = func(url, **kwargs)
+        # check to see that the response code is good
+        resp.raise_for_status()
+        return resp
 
     def get(self, endpoint, params=None):
         """Sends a GET request to the API and returns a native data
@@ -153,7 +169,7 @@ class Client(object):
             - params dict The parameters to be sent via the GET query string.
         """
         r = self.do_request('get', endpoint, params)
-        return json.loads(r.body_string())
+        return r.json
 
     def delete(self, endpoint, params=None):
         """Sends a DELETE request to the API.
@@ -179,7 +195,7 @@ class Client(object):
             - payload dict The data to be sent via the POST body
         """
         r = self.do_request('post', endpoint, params, payload)
-        return json.loads(r.body_string())
+        return r.json
 
     def put(self, endpoint, params=None, payload=None):
         """Sends a PUT request to the API and returns a native data
@@ -194,4 +210,4 @@ class Client(object):
             - payload dict The data to be sent via the POST body
         """
         r = self.do_request('put', endpoint, params, payload)
-        return json.loads(r.body_string())
+        return r.json
